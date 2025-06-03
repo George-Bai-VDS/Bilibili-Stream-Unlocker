@@ -1,24 +1,112 @@
-# BLiveWeb
+# 还我推流权 - 解除B站5000粉的第三方开播限制
+
+## 📢 项目说明
+
+本项目 Fork 自 [ProgramRipper/BLiveWeb](https://github.com/ProgramRipper/BLiveWeb)，原项目采用篡改猴（Tampermonkey）脚本形式运行。
+
+由于篡改猴脚本的权限限制，在某些情况下拦截效果不够理想，因此我将其重构为 Chrome 浏览器扩展程序。**浏览器扩展拥有更高的权限级别**，能够：
+
+- ✅ 更深层次地拦截和修改网络请求
+- ✅ 完全控制页面的 JavaScript 环境
+- ✅ 修改响应数据，绕过权限检查
+- ✅ 大幅提升修改成功率
+
+## 🚫 关于B站的限制
+
+自 **2025年5月26日** 起，B站在网页端强制要求 **5000 粉丝以下的主播必须使用官方直播姬**，禁止使用 OBS 等第三方推流工具。
+
+### 直播姬的严重缺陷
+
+1. **没有插件支持**
+   - OBS 做了这么多年的插件生态，直播姬通通不兼容
+
+2. **界面简陋，使用体验不好**
+   - 没有类似OBS那样的“工作室模式”
+
+3. **疑似本地审核二压**
+   - 曾经有主播控诉，自己没有开播，电脑屏幕捕捉出现违规内容会被自动审核并封禁直播间。
+   - 直播姬的“第三方推流”模式，本质是在电脑本地架设了一个流媒体服务器，然后转发给B站。约等于你的直播画面可以被直播姬的二次服务器“降画质，特调，输出多个画质，限制码率，锐化”但不对你进行任何显示。
+
+4. **平台限制**
+   - **没有 macOS 版本**
+   - **没有 Linux 版本**
+   - 非 Windows 用户的开播自由被完全剥夺
 
 > 求求你们，别折腾自己家主播了。——[白夜Tira](https://t.bilibili.com/847139701670281225)
 
-## 使用方法
+作为一个开放的直播平台，这种人为设置的门槛是不合理的。本插件也旨在帮助新人主播获得平等的直播权利。
 
-### 1. 安装 Tampermonkey 或 Violentmonkey
+## ✨ 功能原理
 
-- [Tampermonkey](https://www.tampermonkey.net/)
-- [Violentmonkey](https://violentmonkey.github.io/)
+- 🔧 **自动修改平台参数**：将开播时的 `platform` 参数从 `pc` 改为 `pc_link`，直接在网页端模拟直播姬客户端
+- 🔓 **绕过权限检查**：强制页面请求的第三方开播权限端点返回 `allow_live = true`，`fans_threshold = 0` 可以正常开播
+- 🚀 **零配置使用**：安装后自动生效，无需任何设置
 
-### 2. 安装脚本
+## 📦 安装步骤
 
-| GitHub Proxy 源                                                                                                         | GitHub 源                                                                                            |
-| ----------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| [安装](https://ghfast.top/https://raw.githubusercontent.com/ProgramRipper/BLiveWeb/refs/heads/master/lib/index.user.js) | [安装](https://raw.githubusercontent.com/ProgramRipper/BLiveWeb/refs/heads/master/lib/index.user.js) |
+### 1. 下载扩展
 
-### 3. 开始直播
+从 [Releases](https://github.com/George-Bai-VDS/Bilibili-Stream-Unlocker/releases) （中国大陆用户可以使用 [我的CDN](https://vcos.vds.pub/git-opt/bilibili-live-extension.zip)）页面下载最新版本的 `bilibili-live-extension.zip` 文件。
 
-本脚本没有符合直播合规性要求的遮挡功能，请自行做好画面遮挡，在网页端 [开播设置](https://link.bilibili.com/p/center/index#/my-room/start-live) 正常开始直播。
+### 2. 解压文件
 
-## 开源协议
+将下载的 ZIP 文件解压到任意文件夹，例如：
+```
+C:\Extensions\bilibili-live-helper\
+```
 
-[MIT](LICENSE)
+### 3. 开启开发者模式
+
+1. 打开 Chrome 浏览器
+2. 在地址栏输入 `chrome://extensions/` 并回车
+3. 在页面右上角找到「开发者模式」开关，将其打开
+
+### 4. 加载扩展
+
+1. 点击页面左上角的「加载已解压的扩展程序」按钮
+2. 选择刚才解压的文件夹
+3. 确认加载
+
+### 5. 验证安装
+
+安装成功后，执行以下步骤验证：
+
+1. 打开 [B站直播中心](https://link.bilibili.com/)
+2. 在「我的直播间-开播设置」中
+3. 如果看到「第三方软件开播」的卡片，说明插件已生效
+4. 现在你可以使用 OBS 等软件进行直播了！
+
+## 🔧 兼容性
+
+- ✅ Chrome 88+
+- ✅ Microsoft Edge
+- ✅ Brave Browser
+- ✅ 其他基于 Chromium 的浏览器
+
+## ⚠️ 注意事项
+
+2. **合规责任**：与原脚本一样，本插件没有符合直播合规性要求的遮挡功能，请自行做画面遮挡。
+3. **首次使用**：安装后需要刷新已打开的直播页面
+4. **更新扩展**：如有新版本，重复安装步骤即可覆盖更新
+5. **隐私安全**：本扩展仅在B站直播相关页面运行，不会收集任何个人信息，也不会上传任何你的信息给任何第三方服务。
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！如果你有任何改进建议或遇到问题，请：
+
+1. 先搜索是否已有相关 Issue
+2. 提供详细的问题描述和复现步骤
+3. 如可能，附上控制台截图
+
+## 📄 开源协议
+
+本项目基于 MIT 协议开源，详见 [LICENSE](LICENSE.txt) 文件。
+
+## 🙏 致谢
+
+- 感谢 [ProgramRipper](https://github.com/ProgramRipper) 的原始项目
+- 感谢所有为新人主播发声的朋友们
+
+---
+
+如果这个项目对你有帮助，请给个 ⭐ Star 支持一下！
