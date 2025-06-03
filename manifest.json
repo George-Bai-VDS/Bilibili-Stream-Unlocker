@@ -1,0 +1,48 @@
+{
+    "manifest_version": 3,
+    "name": "还我推流权",
+    "version": "1.0.0",
+    "description": "让100粉以上，5000粉以下用户也能在 B 站使用 OBS 开播，恢复推流地址显示的浏览器插件。",
+    "permissions": [
+        "webRequest",
+        "webRequestBlocking",
+        "declarativeNetRequest",
+        "declarativeNetRequestWithHostAccess",
+        "storage",
+        "tabs"
+    ],
+    "host_permissions": [
+        "*://api.live.bilibili.com/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://link.bilibili.com/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_start",
+            "all_frames": true,
+            "world": "MAIN"
+        }
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "还我推流权"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": ["inject.js"],
+            "matches": ["*://*.bilibili.com/*"]
+        }
+    ],
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    }
+}
